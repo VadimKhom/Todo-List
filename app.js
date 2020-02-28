@@ -34,8 +34,13 @@ const tasks = [{
     const listContainer = document.querySelector(
         ".tasks-list-section .list-group"
     );
+    const form = document.forms["addTasks"]; // нашли DOM-элементы формы
+    const inputTitle = form.elements["title"];
+    const inputBody = form.elements["body"];
 
-    renderAllTasks(objOfTasks); //функция которая на вход получает объкт тасков 
+    //Events
+    renderAllTasks(objOfTasks); //функция которая на вход получает объкт тасков
+    form.addEventListener('submit', onFormSubmitHandler); // на форму повесили обработчик событий
 
     function renderAllTasks(tasksList) {
         if (!tasksList) {
@@ -59,7 +64,7 @@ const tasks = [{
             "align - items - center",
             "flex - wrap",
             "mt - 2"
-        ); // функция, которая занимается генерацией одного элемента списка, основываясь на нашей задаче которую сюда передали 
+        ); // функция, которая занимается генерацией одного элемента списка, основываясь на нашей задаче которую сюда передали
 
         const span = document.createElement("span");
         span.textContent = title;
@@ -79,4 +84,32 @@ const tasks = [{
 
         return li;
     } // эту функцию будем вызывать на каждой итерации внутри функции renderAllTasks
+
+    function onFormSubmitHandler(e) {
+        e.preventDefault();
+        const titleValue = inputTitle.value; // забрали значение title и body
+        const bodyValue = inputBody.value;
+
+        if (!titleValue || !bodyValue) {
+            alert("Пожалуйста введите title и body"); // проверки есть ли эти значения
+            return;
+        }
+        const task = createNewTask(titleValue, bodyValue); // копию этойо новой задачи мы получаем в task
+        const listItem = listItemTemplate(task); // на следующем шаге создаем DOM-объект, шаблон нашего элемента списка на основе вновь созданнйо таски
+        listContainer.insertAdjacentElement('afterbegin', listItem); // добавляем с помощью метода insertAdjacentElement в самое начало списка задач
+        form.reset(); // сбрасываем форму
+    } //функция добавления одной таски в список задач
+
+    function createNewTask(title, body) { //функция создает один объект задачи с title,body,_id
+        const newTasks = {
+            title,
+            body,
+            completed: false,
+            _id: `task-${Math.random()}`,
+        };
+
+        objOfTasks[newTask._id] = newTask; //добавляем задачу в список всех тасков
+
+        return {...newTask }; // возвращаем копию этой новой задачи
+    }
 })(tasks);
