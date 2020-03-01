@@ -1,3 +1,5 @@
+// Форма
+// Список задач
 const tasks = [{
         _id: "5d2ca9e2e03d40b326596aa7",
         completed: true,
@@ -30,7 +32,7 @@ const tasks = [{
         return acc;
     }, {});
 
-    //Elements Ui
+    // Elemnts UI
     const listContainer = document.querySelector(
         ".tasks-list-section .list-group"
     );
@@ -38,36 +40,35 @@ const tasks = [{
     const inputTitle = form.elements["title"];
     const inputBody = form.elements["body"];
 
-    //Events
+    // Events
     renderAllTasks(objOfTasks); //функция которая на вход получает объкт тасков
-    form.addEventListener('submit', onFormSubmitHandler); // на форму повесили обработчик событий
+    form.addEventListener("submit", onFormSubmitHandler); // на форму повесили обработчик событий
     listContainer.addEventListener("click", onDeletehandler); // повесили обработчик события на весь список в котором геерируется наши задачи
 
     function renderAllTasks(tasksList) {
         if (!tasksList) {
-            console.error("Передайте список задач"); // проверяет что передан task или нет
+            console.error("Передайте список задач!"); // проверяет что передан task или нет
             return;
         }
 
         const fragment = document.createDocumentFragment(); // фрагмент будущего списка с задачами, для того чтобы не добавлять задачи по одной, не вызывая перересовку DOM-a
         Object.values(tasksList).forEach(task => {
             const li = listItemTemplate(task);
-            fragment.appendChild(li);
-        }); //перебераем список тасков, такс передаем в функцию listItemTemplate
+            fragment.appendChild(li); //перебераем список тасков, такс передаем в функцию listItemTemplate
+        });
         listContainer.appendChild(fragment);
     }
 
     function listItemTemplate({ _id, title, body } = {}) {
         const li = document.createElement("li");
         li.classList.add(
-            "list - group - item",
-            "d - flex ",
-            "align - items - center",
-            "flex - wrap",
-            "mt - 2"
+            "list-group-item",
+            "d-flex",
+            "align-items-center",
+            "flex-wrap",
+            "mt-2"
         ); // функция, которая занимается генерацией одного элемента списка, основываясь на нашей задаче которую сюда передали
-        li.setAttribute("data-task-id", _id);
-        //мы добавили атрибут при генерации на каждый элемент чтобы потом определить какой конкретный элемент хотим удалить из ДОМа и какой элемент из списка со всеми тасками
+        li.setAttribute("data-task-id", _id); //мы добавили атрибут при генерации на каждый элемент чтобы потом определить какой конкретный элемент хотим удалить из ДОМа и какой элемент из списка со всеми тасками
 
         const span = document.createElement("span");
         span.textContent = title;
@@ -97,6 +98,7 @@ const tasks = [{
             alert("Пожалуйста введите title и body"); // проверки есть ли эти значения
             return;
         }
+
         const task = createNewTask(titleValue, bodyValue); // копию этойо новой задачи мы получаем в task
         const listItem = listItemTemplate(task); // на следующем шаге создаем DOM-объект, шаблон нашего элемента списка на основе вновь созданнйо таски
         listContainer.insertAdjacentElement("afterbegin", listItem); // добавляем с помощью метода insertAdjacentElement в самое начало списка задач
@@ -105,7 +107,7 @@ const tasks = [{
 
     function createNewTask(title, body) {
         //функция создает один объект задачи с title,body,_id
-        const newTasks = {
+        const newTask = {
             title,
             body,
             completed: false,
@@ -118,24 +120,25 @@ const tasks = [{
     }
 
     function deleteTask(id) {
-        const { title } = objOfTask[id]; // функция принимает id, вытягивает title для будущего вывода в окне confirm
-        const isConfirm = confirm(`Вы точно хотите удалить задачу: ${title}`);
+        const { title } = objOfTasks[id]; // функция принимает id, вытягивает title для будущего вывода в окне confirm
+        const isConfirm = confirm(`Точно вы хотите удалить задачу: ${title}`);
         if (!isConfirm) return isConfirm; // если ответили отменой, то возвращаем статус isConfirm-false
         delete objOfTasks[id]; // если ответили да, то возвращаем статус isConfirm-true
         return isConfirm;
     }
 
-    function deleteTaskfromHtml(confirmed, el) {
+    function deleteTaskFromHtml(confirmed, el) {
         if (!confirmed) return;
         el.remove();
     }
 
     function onDeletehandler({ target }) {
-        if (target.classList.contains("delete-btn")) { // при клике на весь список мы определяем на кого произошел клик и это кнопка delete-btn
-            const parent = target.closest("[data-task-id]"); // то ттгда мы находим родителя по атрибиуту data-task-id
+        if (target.classList.contains("delete-btn")) {
+            // при клике на весь список мы определяем на кого произошел клик и это кнопка delete-btn
+            const parent = target.closest("[data-task-id]"); // то тогда мы находим родителя по атрибиуту data-task-id
             const id = parent.dataset.taskId; // забираем id
             const confirmed = deleteTask(id); // передаем id в deleteTask
-            deleteTaskfromHtml(confirmed, parent); // передаем сам элемент который хотим удалить и подветрждение удаления   
+            deleteTaskFromHtml(confirmed, parent); // передаем сам элемент который хотим удалить и подветрждение удаления
         }
     }
 })(tasks);
