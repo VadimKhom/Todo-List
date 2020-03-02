@@ -96,6 +96,8 @@ const tasks = [{
         }
     };
 
+    let lastSelectedTheme = "default";
+
     // Elemnts UI
     const listContainer = document.querySelector(
         ".tasks-list-section .list-group"
@@ -103,11 +105,13 @@ const tasks = [{
     const form = document.forms["addTask"]; // нашли DOM-элементы формы
     const inputTitle = form.elements["title"];
     const inputBody = form.elements["body"];
+    const themeSelect = document.getElementById("themeSelect");
 
     // Events
     renderAllTasks(objOfTasks); //функция которая на вход получает объкт тасков
     form.addEventListener("submit", onFormSubmitHandler); // на форму повесили обработчик событий
     listContainer.addEventListener("click", onDeletehandler); // повесили обработчик события на весь список в котором геерируется наши задачи
+    themeSelect.addEventListener("change", onThemeSelectHandler);
 
     function renderAllTasks(tasksList) {
         if (!tasksList) {
@@ -204,5 +208,25 @@ const tasks = [{
             const confirmed = deleteTask(id); // передаем id в deleteTask
             deleteTaskFromHtml(confirmed, parent); // передаем сам элемент который хотим удалить и подветрждение удаления
         }
+    }
+
+    function onThemeSelectHandler(e) {
+        const selectedTheme = themeSelect.value;
+        const isConfirmed = confirm(
+            `Вы действительно хотите зменить тему: ${selectedTheme}`
+        );
+        if (!isConfirmed) {
+            themeSelect.value = lastSelectedTheme;
+            return;
+        }
+        setTheme(selectedTheme);
+        lastSelectedTheme = selectedTheme;
+    }
+
+    function setTheme(name) {
+        const selectedThemObj = themes[name];
+        Object.entries(selectedThemObj).forEach(([key, value]) => {
+            document.documentElement.style.setProperty(key, value);
+        });
     }
 })(tasks);
