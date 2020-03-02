@@ -31,6 +31,7 @@ const tasks = [{
         acc[task._id] = task;
         return acc;
     }, {});
+
     const themes = {
         default: {
             "--base-text-color": "#212529",
@@ -213,7 +214,7 @@ const tasks = [{
     function onThemeSelectHandler(e) {
         const selectedTheme = themeSelect.value;
         const isConfirmed = confirm(
-            `Вы действительно хотите изменить тему: ${selectedTheme}`,
+            `Вы действительно хотите изменить тему: ${selectedTheme}`
         );
         if (!isConfirmed) {
             themeSelect.value = lastSelectedTheme;
