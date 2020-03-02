@@ -213,7 +213,7 @@ const tasks = [{
     function onThemeSelectHandler(e) {
         const selectedTheme = themeSelect.value;
         const isConfirmed = confirm(
-            `Вы действительно хотите зменить тему: ${selectedTheme}`
+            `Вы действительно хотите изменить тему: ${selectedTheme}`,
         );
         if (!isConfirmed) {
             themeSelect.value = lastSelectedTheme;
