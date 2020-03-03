@@ -97,7 +97,7 @@ const tasks = [{
         }
     };
 
-    let lastSelectedTheme = "default";
+    let lastSelectedTheme = localStorage.getItem("app_theme") || "default"; //выбор последней установленной темы 
 
     // Elemnts UI
     const listContainer = document.querySelector(
@@ -109,6 +109,7 @@ const tasks = [{
     const themeSelect = document.getElementById("themeSelect");
 
     // Events
+    setTheme(lastSelectedTheme);
     renderAllTasks(objOfTasks); //функция которая на вход получает объкт тасков
     form.addEventListener("submit", onFormSubmitHandler); // на форму повесили обработчик событий
     listContainer.addEventListener("click", onDeletehandler); // повесили обработчик события на весь список в котором геерируется наши задачи
@@ -222,6 +223,7 @@ const tasks = [{
         }
         setTheme(selectedTheme);
         lastSelectedTheme = selectedTheme;
+        localStorage.setItem("app_theme", selectedTheme);
     }
 
     function setTheme(name) {
